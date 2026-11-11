@@ -34,8 +34,7 @@ def load_model():
     return YOLO(model_path)
 
 model = load_model()
-st.write("モデルのクラス情報:", model.names)
-st.write("モデルの種類:", model.task)
+
 
 
 TARGET_SIZE = 960
@@ -384,37 +383,15 @@ if uploaded_file:
                 st.session_state.mask_rects
             )
 
-        with st.spinner("AIがパイプを検出中..."):
+            with st.spinner("AIがパイプを検出中..."):
 
-            results = model.predict(
-            inference_img,
-            conf=0.5,
-            max_det=2000,
-            verbose=False
-    )
-
-                # AIの検出数
-                detection_count = len(results[0].boxes)
-
-                st.write(
-                    "モデルが検出した数:",
-                    detection_count
+                results = model.predict(
+                    inference_img,
+                    conf=0.5,
+                    max_det=2000,
+                    verbose=False
                 )
 
-                # 信頼度の確認
-                if detection_count > 0:
-
-                    st.write(
-                        "信頼度の最低値:",
-                        float(results[0].boxes.conf.min())
-                    )
-
-                    st.write(
-                        "信頼度の最高値:",
-                        float(results[0].boxes.conf.max())
-                    )
-
-                # 検出位置を保存
                 boxes = []
 
                 for box in results[0].boxes:
@@ -434,11 +411,6 @@ if uploaded_file:
                     ])
 
                 st.session_state.auto_boxes = boxes
-
-                st.write(
-                    "AIの検出数（確認用）:",
-                    len(st.session_state.auto_boxes)
-                )
 
 
         # ---------------------------------------------
